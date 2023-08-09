@@ -140,10 +140,10 @@ per class AR:
 | stop     | 57.684 | left    | 53.559 | right    | 54.303 |
 | straight | 57.327 | no_left | 51.024 | no_right | 57.004 |
 
-Final mAP (Average Precision (AP) @[ IoU=0.50:0.95 ]): 42.80084
+Final mAP (Average Precision (AP) @[ IoU=0.50:0.95 ]): 42.80084 %
 ```
 
-- Kết quả đánh giá sẽ dựa trên `Final mAP (Average Precision (AP) @[ IoU=0.50:0.95 ])`, trong TH này là `24.38631`.
+- Kết quả đánh giá sẽ dựa trên `Final mAP (Average Precision (AP) @[ IoU=0.50:0.95 ])`, trong TH này là `42.80084` (%).
 - Kết quả đánh giá được ghi ra tệp `result.json` trong thư mục hiện tại.
 
 ## 3. Tải lên mô hình và đánh giá trên tập dữ liệu bí mật
@@ -184,6 +184,57 @@ Việc gán nhãn có thể sử dụng bất cứ công cụ nào. Chúng tôi 
 - [Labelme](https://github.com/wkentaro/labelme): Gán nhãn trực tiếp trên giao diện Desktop, sau đó sử dụng [labelme2coco](https://github.com/fcakyon/labelme2coco) để chuyển đổi sang định dạng COCO.
 - [CVAT](https://www.cvat.ai/), [Label Studio](https://labelstud.io/): Công cụ gán nhãn trên giao diện web, hỗ trợ xuât sang định dạng COCO.
 
+**Lưu ý:** Thứ tự các category trong định dạng COCO như sau:
+
+```json
+"categories": [
+    {
+        "id": 1,
+        "name": "stop",
+        "supercategory": "trafficsign"
+    },
+    {
+        "id": 2,
+        "name": "left",
+        "supercategory": "trafficsign"
+    },
+    {
+        "id": 3,
+        "name": "right",
+        "supercategory": "trafficsign"
+    },
+    {
+        "id": 4,
+        "name": "straight",
+        "supercategory": "trafficsign"
+    },
+    {
+        "id": 5,
+        "name": "no_left",
+        "supercategory": "trafficsign"
+    },
+    {
+        "id": 6,
+        "name": "no_right",
+        "supercategory": "trafficsign"
+    }
+]
+```
+
+
+Một số team có thể gặp khó khăn trong việc sắp xếp lại thứ tự các category trong định dạng COCO. Các bạn có thể tham khảo script `convert_labelme_tfs.py` để chuyển đổi đúng thứ tự khi label với AnyLabeling hoặc Labelme:
+
+```shell
+pip install sahi tqdm
+python tools/convert_labelme_tfs.py <folder ảnh labelme> <file annotation đầu ra COCO>
+```
+
+Ví dụ:
+
+```shell
+python tools/convert_labelme_tfs.py ./labeled_images ./annotations.json
+```
+
 Các đội chơi có thể sử dụng các công cụ khác, tuy nhiên cần đảm bảo định dạng đầu ra là định dạng COCO, hoặc có thể chuyển đổi sang COCO để huấn luyện mô hình.
 
 
@@ -193,3 +244,12 @@ Sau khi gán nhãn dữ liệu, các đội chơi có thể chia dữ liệu th�
 
 - Tập huấn luyện (train): Tập dữ liệu được sử dụng để huấn luyện mô hình. Tập dữ liệu này có thể chiếm khoảng 80% tổng số dữ liệu.
 - Tập đánh giá (val): Tập dữ liệu được sử dụng để đánh giá mô hình. Tập dữ liệu này có thể chiếm khoảng 20% tổng số dữ liệu.
+
+
+### 4.4. Notebook huấn luyện
+
+Các bạn dựa vào notebook sau để huấn luyện trên Colab hoặc Kaggle:
+
+[notebook.ipynb](notebook.ipynb)
+
+> [Mở trong Google Colab](https://colab.research.google.com/github/makerviet/tfs-data-centric/blob/main/notebook.ipynb).
